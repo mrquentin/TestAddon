@@ -1,0 +1,98 @@
+plugins {
+    id "dev.architectury.loom" version "1.3-SNAPSHOT"
+    id "maven-publish"
+}
+
+base {
+    archivesName = project.archives_base_name
+}
+
+version = project.mod_version
+group = project.maven_group
+
+java {
+    sourceCompatibility = targetCompatibility = JavaVersion.VERSION_17
+}
+
+loom {
+    silentMojangMappingsLicense()
+
+    forge {
+        mixinConfig "examplemod.mixins.json"
+
+        dataGen{
+            mod(mod_id)
+        }
+    }
+
+    runs {
+        data {
+            programArg("--existing=" + file("src/main/resources").absolutePath)
+            programArgs("--client", "--server")
+        }
+    }
+}
+
+repositories {
+    maven { url "https://maven.teamresourceful.com/repository/maven-public/" }
+    maven { url "https://maven.shedaniel.me" }
+}
+
+dependencies {
+    minecraft "com.mojang:minecraft:${project.minecraft_version}"
+    forge "net.minecraftforge:forge:${project.minecraft_version}-${project.forge_version}"
+
+    mappings loom.officialMojangMappings()
+
+    // Dependencies
+    modImplementation("earth.terrarium.adastra:ad_astra-forge-${project.minecraft_version}:${project.ad_astra_version}")
+}
+
+processResources {
+    inputs.property "version", project.version
+
+    filesMatching("META-INF/mods.toml") {
+        expand "version": project.version
+    }
+}
+
+tasks.withType(JavaCompile) {
+    options.encoding = "UTF-8"
+    options.release = 17
+}
+
+java {
+    withSourcesJar()
+}
+
+jar {
+    // add some additional metadata to the jar manifest
+    manifest {
+        attributes([
+                "Specification-Title"     : project.mod_id,
+                "Specification-Vendor"    : project.mod_author,
+                "Specification-Version"   : "1",
+                "Implementation-Title"    : project.name,
+                "Implementation-Version"  : version,
+                "Implementation-Vendor"   : project.mod_author,
+                "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ")
+        ])
+    }
+}
+
+// configure the maven publication
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            from components.java
+        }
+    }
+
+    // See https://docs.gradle.org/current/userguide/publishing_maven.html for information on how to set up publishing.
+    repositories {
+        // Add repositories to publish to here.
+        // Notice: This block does NOT have the same function as the block in the top level.
+        // The repositories here will be used for publishing your artifact, not for
+        // retrieving dependencies.
+    }
+}
