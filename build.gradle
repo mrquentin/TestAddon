@@ -45,6 +45,9 @@ dependencies {
     mappings loom.officialMojangMappings()
 
     // Dependencies
+    modImplementation("com.teamresourceful.resourcefullib:resourcefullib-forge-${project.minecraft_version}:${project.resourcefullib_version}")
+    modImplementation("com.teamresourceful.resourcefulconfig:resourcefulconfig-forge-${project.minecraft_version}:${project.resourcefulconfig_version}")
+    modImplementation("earth.terrarium.botarium:botarium-forge-${project.minecraft_version}:${project.botarium_version}")
     modImplementation("earth.terrarium.adastra:ad_astra-forge-${project.minecraft_version}:${project.ad_astra_version}") {transitive false}
 
     // Mixin Extra
