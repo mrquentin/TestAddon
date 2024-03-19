@@ -46,6 +46,10 @@ dependencies {
 
     // Dependencies
     modImplementation("earth.terrarium.adastra:ad_astra-forge-${project.minecraft_version}:${project.ad_astra_version}")
+
+    // Mixin Extra
+    implementation(annotationProcessor("io.github.llamalad7:mixinextras-common:${project.mixinextras_version}"))
+    implementation(include("io.github.llamalad7:mixinextras-forge:${project.mixinextras_version}"))
 }
 
 processResources {
